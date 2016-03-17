@@ -63,7 +63,7 @@ CREATE TABLE Prescribed(
 	PRIMARY KEY (patientID, doctorID, drugID),
 	FOREIGN KEY (patientID) REFERENCES Patient,
 	FOREIGN KEY (doctorID) REFERENCES Doctor,
-	FOREIGN KEY (drugID), REFERENCES Drug));
+	FOREIGN KEY (drugID) REFERENCES Drug);
   
 grant select on Prescribed to public;
  
@@ -73,7 +73,7 @@ CREATE TABLE Inventory(
 	stock INTEGER,
 	PRIMARY KEY (drugID, pharmacyID),
 	FOREIGN KEY (drugID) REFERENCES Drug,
-	FOREIGN KEY (pharmacyID) REFERENCES Pharmacy));
+	FOREIGN KEY (pharmacyID) REFERENCES Pharmacy);
   
 grant select on Inventory to public;
  
@@ -87,6 +87,6 @@ CREATE TABLE Purchase(
 	PRIMARY KEY (receiptNumber),
 	FOREIGN KEY (patientID) REFERENCES Patient,
 	FOREIGN KEY (drugID) REFERENCES Drug,
-	FOREIGN KEY (pharmacyID) REFERENCES Pharmacy));
+	FOREIGN KEY (pharmacyID) REFERENCES Pharmacy);
   
  grant select on Purchase to public;
