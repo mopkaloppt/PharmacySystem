@@ -17,7 +17,7 @@ public class Prescribed {
     /*
      * inserts a Prescribed
      */ 
-    private void insertPrescribed() {
+	public void insertPrescribed() {
 		
     	
     }
@@ -27,7 +27,7 @@ public class Prescribed {
     /*
      * deletes a Prescribed
      */ 
-    private void deletePrescribed() {
+	public void deletePrescribed() {
     	
     }
     
@@ -36,7 +36,7 @@ public class Prescribed {
     /*
      * updates a Prescribed
      */ 
-    private void updatePrescribed() {
+	public void updatePrescribed() {
     	
     }
     

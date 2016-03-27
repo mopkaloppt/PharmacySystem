@@ -17,7 +17,7 @@ public class Inventory {
     /*
      * inserts an Inventory
      */ 
-    private void insertInventory() {
+	public void insertInventory() {
 		
     	
     }
@@ -27,7 +27,7 @@ public class Inventory {
     /*
      * deletes an Inventory
      */ 
-    private void deleteInventory() {
+	public void deleteInventory() {
     	
     }
     
@@ -36,7 +36,7 @@ public class Inventory {
     /*
      * updates an Inventory
      */ 
-    private void updateInventory() {
+	public void updateInventory() {
     	
     }
     

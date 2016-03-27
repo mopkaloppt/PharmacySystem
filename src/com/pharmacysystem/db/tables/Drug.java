@@ -42,7 +42,7 @@ public class Drug {
     /*
      * inserts a drug
      */ 
-    private void insertDrug() {
+	public void insertDrug() {
 		
     	
     }
@@ -52,7 +52,7 @@ public class Drug {
     /*
      * deletes a drug
      */ 
-    private void deleteDrug() {
+	public void deleteDrug() {
     	
     }
     
@@ -61,7 +61,7 @@ public class Drug {
     /*
      * updates a drug
      */ 
-    private void updateDrug() {
+	public void updateDrug() {
     	
     }
     

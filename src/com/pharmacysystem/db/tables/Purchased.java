@@ -27,7 +27,7 @@ public class Purchased {
     /*
      * inserts a purchase
      */ 
-    private void insertPurchased() {
+	public void insertPurchased() {
 		
     	
     }
@@ -37,7 +37,7 @@ public class Purchased {
     /*
      * deletes a purchase
      */ 
-    private void deletePurchased() {
+	public void deletePurchased() {
     	
     }
     
@@ -46,7 +46,7 @@ public class Purchased {
     /*
      * updates a purchase
      */ 
-    private void updatePurchased() {
+	public void updatePurchased() {
     	
     }
     
