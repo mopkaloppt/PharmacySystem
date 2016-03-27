@@ -17,7 +17,7 @@ public class Pharmacy {
     /*
      * inserts a Pharmacy
      */ 
-    private void insertPharmacy() {
+	public void insertPharmacy() {
 		
     	
     }
@@ -27,7 +27,7 @@ public class Pharmacy {
     /*
      * deletes a Pharmacy
      */ 
-    private void deletePharmacy() {
+	public void deletePharmacy() {
     	
     }
     
@@ -36,7 +36,7 @@ public class Pharmacy {
     /*
      * updates a Pharmacy
      */ 
-    private void updatePharmacy() {
+	public void updatePharmacy() {
     	
     }
     
