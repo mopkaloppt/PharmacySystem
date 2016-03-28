@@ -9,7 +9,7 @@ public class Prescribed {
 	/*
      * displays Prescribes
      */ 
-	public static void displayPrescribed(ResultSet rs) throws SQLException {
+	public void displayPrescribed() throws SQLException {
 		
 	}
 

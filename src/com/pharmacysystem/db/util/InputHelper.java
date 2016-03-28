@@ -27,5 +27,17 @@ public class InputHelper {
 		String input = getInput(prompt);
 		return Double.parseDouble(input);
 	}
+	
+	public static Integer getId(String prompt) throws NumberFormatException {
+		
+		String input = getInput(prompt);
+		return Integer.parseUnsignedInt(input);
+	}
+	
+	public static Integer getStock(String prompt) throws NumberFormatException {
+		
+		String input = getInput(prompt);
+		return Integer.parseUnsignedInt(input);
+	}
 
 }

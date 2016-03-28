@@ -19,7 +19,7 @@ public class Purchased {
      * displays purchases
      */ 
 	
-	public static void displayPurchased(ResultSet rs) throws SQLException {
+	public void displayPurchased() throws SQLException {
 		
 	}
 
