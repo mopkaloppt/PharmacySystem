@@ -216,8 +216,9 @@ public class Main {
 			break;
 
 		case "3": // Drug
-			// About to work on this 
-			//doctor.displayDrug();
+			// Doctor can only see drug info, cannot modify
+			Drug drug = new Drug();
+			drug.displayDrug();
 			break;
 
 		case "4": // Prescription
