@@ -47,9 +47,9 @@ public class Doctor  {
 				insertDoctor();
 				break;
 			case "3":
-				//doctor_id = InputHelper.getId("Enter the ID you wish to delete: ");
+				doctor_id = InputHelper.getId("Enter the ID you wish to delete: ");
 				
-				//deleteDoctor(doctor_id);
+				deleteDoctor(doctor_id);
 				break;
 			case "4":
 				updateDoctor();
@@ -217,11 +217,12 @@ public class Doctor  {
 
 			doctor_phone = InputHelper.getInput("Enter phone number (e.g. XXX-XXX-XXXX): ");
 			stmt.setString(6, doctor_phone);
-		
 			
-			int affected = stmt.executeUpdate();
+			int[] affected = stmt.executeBatch();
 			
-			if (affected == 1) {
+			//int affected = stmt.executeUpdate();
+			
+			if (affected != null) {
 				System.out.println("A row has been inserted");
 				
 			}
@@ -254,7 +255,27 @@ public class Doctor  {
 	 * deletes a doctor
 	 */ 
 	public boolean deleteDoctor(int doctor_id) throws IOException, SQLException {
-		return true;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("DELETE FROM doctor WHERE doctor_id = ?");
+			
+			stmt.setInt(1, doctor_id);
+			int affected = stmt.executeUpdate();
+			
+			if(affected == 1) {
+				System.out.println("ID: " + doctor_id +" has been deleted");
+				return true;
+				
+			}
+			else {
+				System.out.println("No rows have been deleted!");
+				return false;
+			}
+		}
+		catch (SQLException e) {
+			System.err.println(e);
+			return false;
+			
+		}	
 	
 	}
 
