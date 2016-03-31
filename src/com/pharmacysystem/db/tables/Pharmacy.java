@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.pharmacysystem.db.Main;
+import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
 
 public class Pharmacy {
@@ -15,7 +15,7 @@ public class Pharmacy {
 	String pharmacy_address; 
 	String pharmacy_phone;
 	
-	Connection conn = Main.getConn();
+	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
 	/*
      * displays Pharmacies

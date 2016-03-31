@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.pharmacysystem.db.Main;
+import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
 
 public class Inventory {
@@ -15,7 +15,7 @@ public class Inventory {
 	int drug_id;
 	int stock;
 	
-	Connection conn = Main.getConn();
+	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	/*
      * displays inventories
      */ 

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.pharmacysystem.db.Main;
+import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
 
 public class Drug {
@@ -17,7 +17,7 @@ public class Drug {
 	String drug_info;
 	String dosage; 
 
-	Connection conn = Main.getConn();
+	private static Connection conn = ConnectionManager.getInstance().getConnection();
 
 
 	/*

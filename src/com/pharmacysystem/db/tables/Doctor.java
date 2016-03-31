@@ -6,11 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
-import com.pharmacysystem.db.Main;
+import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
 
-public class Doctor extends Patient {
+public class Doctor  {
 
 	int			doctor_id;
 	String		d_fname;
@@ -19,7 +18,119 @@ public class Doctor extends Patient {
 	String		address;
 	String		doctor_phone;
 
-	Connection conn = Main.getConn();
+
+	private static Connection conn = ConnectionManager.getInstance().getConnection();
+	
+	/*
+	 * Options for Doctor 
+	 */ 
+	public void doctorOptions(String doc_options) throws IOException, SQLException {
+		/*	doc_options to access the following:
+			1 - Doctor 
+			2 - Patient
+			3 - Drug
+			4 - Prescription */
+
+		switch (doc_options) {
+		case "1": // Doctor
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display doctors");
+			System.out.println("2 - Insert doctor");
+			System.out.println("3 - Delete doctor");
+			System.out.println("4 - Update doctor");
+			String doc_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			switch (doc_subOptions) {
+			case "1":
+				displayDoctor();
+				break;
+			case "2":
+				insertDoctor();
+				break;
+			case "3":
+				//doctor_id = InputHelper.getId("Enter the ID you wish to delete: ");
+				
+				//deleteDoctor(doctor_id);
+				break;
+			case "4":
+				updateDoctor();
+				break;									
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}		
+			break;
+
+
+		case "2": // Patient
+			Patient pat = new Patient();
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display patients");
+			System.out.println("2 - Insert patient");
+			System.out.println("3 - Delete patient");
+			System.out.println("4 - Update patient");
+			doc_subOptions  = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			switch (doc_subOptions) {
+			case "1":
+				pat.displayPatient();
+				break;
+			case "2":
+				pat.insertPatient();
+				break;
+			case "3":
+				//pat.deletePatient();
+				break;
+			case "4":
+				//pat.updatePatient();
+				break;
+
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}
+			break;
+
+		case "3": // Drug
+			// Doctor can only see drug info, cannot modify
+			Drug drug = new Drug();
+			drug.displayDrug();
+			break;
+
+		case "4": // Prescription
+			Prescribed prescr = new Prescribed();
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display prescriptions");
+			System.out.println("2 - Insert prescription");
+			System.out.println("3 - Delete prescription");
+			System.out.println("4 - Update prescription");
+			doc_subOptions  = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			switch (doc_subOptions) {
+			case "1":
+				prescr.displayPrescribed();
+				break;
+			case "2":
+				prescr.insertPrescribed();
+				break;
+			case "3":
+				//prescr.deletePrescribed();
+				break;
+			case "4":
+				//prescr.updatePrescribed();	
+				break;									
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}														
+			break;
+			
+		case "quit":
+			System.out.println("Bye!");
+			System.exit(0);
+			break;
+		}					
+	}
 
 	/*
 	 * displays doctors
@@ -53,10 +164,11 @@ public class Doctor extends Patient {
 				buffer.append("\nLast name: " + rs.getString("d_lname"));
 				buffer.append("\nCredentials: " + rs.getString("credentials"));
 				buffer.append("\nAddress: " + rs.getString("address"));
-				buffer.append("\nPhone: " + rs.getString("phone"));
+				buffer.append("\nPhone: " + rs.getString("phone") + "\n");
 
 				System.out.println(buffer.toString());					
 			}	
+			stmt.close();
 
 		}								
 		catch (SQLException ex) {
@@ -107,7 +219,15 @@ public class Doctor extends Patient {
 			stmt.setString(6, doctor_phone);
 		
 			
-			stmt.executeUpdate();
+			int affected = stmt.executeUpdate();
+			
+			if (affected == 1) {
+				System.out.println("A row has been inserted");
+				
+			}
+			else {
+				System.out.println("No rows have been inserted!");
+			}
 
 			// commit work 
 			conn.commit();
@@ -133,18 +253,20 @@ public class Doctor extends Patient {
 	/*
 	 * deletes a doctor
 	 */ 
-	public void deleteDoctor() {
-		// for testing
-		System.out.println("delete Doctor");
+	public boolean deleteDoctor(int doctor_id) throws IOException, SQLException {
+		return true;
+	
 	}
 
 
 	/*
 	 * updates a doctor
 	 */ 
-	public void updateDoctor() {
-		// for testing
-		System.out.println("update Doctor");
+	public void updateDoctor() throws IOException, SQLException {
+		
+	
+		
 	}
 
 }
+

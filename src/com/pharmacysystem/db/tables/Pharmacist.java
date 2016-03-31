@@ -1,12 +1,13 @@
 package com.pharmacysystem.db.tables;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.pharmacysystem.db.Main;
+import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
 
 public class Pharmacist extends Pharmacy {
@@ -17,7 +18,191 @@ public class Pharmacist extends Pharmacy {
 	int 		pharmacy_id;
 	//int 		pharmacy_id = getPharmacyID(); // Do we have to inherit from Pharmacy class??
 
-	Connection conn = Main.getConn();
+	private static Connection conn = ConnectionManager.getInstance().getConnection();
+	
+	/*
+	 * Options for Pharmacist 
+	 */ 
+	public void pharmacistOptions(String pharm_options) throws IOException, SQLException {
+		/*	pharm_options to access the following:
+		1 - Pharmacy Info 
+		2 - Pharmacist Database
+		3 - Inventory
+		4 - Drug Info
+		5 - Prescription
+		6 - Order */
+			
+		switch (pharm_options) {
+
+		case "1": // Pharmacy Info 	
+			Pharmacy pharm = new Pharmacy();
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display pharmacies");
+			System.out.println("2 - Insert pharmacy");
+			System.out.println("3 - Delete pharmacy");
+			System.out.println("4 - Update pharmacy");
+						
+			String pharm_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			
+			switch (pharm_subOptions) {
+			case "1":
+				pharm.displayPharmacy();		
+				break;
+			case "2":
+				pharm.insertPharmacy();
+				break;
+			case "3":
+				//pharmacist.deletePharmacy();
+				break;
+			case "4":
+				//pharmacist.updatePharmacy();
+				break;
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}
+			break;
+			
+		case "2": // Pharmacist Database
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display pharmacists");
+			System.out.println("2 - Insert pharmacists");
+			System.out.println("3 - Delete pharmacists");
+			System.out.println("4 - Update pharmacists");
+			pharm_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			
+			switch (pharm_subOptions) {
+			case "1":
+				displayPharmacist();
+				break;
+			case "2":
+				insertPharmacist();
+				break;
+			case "3":
+				//pharmacist.deletePharmacist();
+				break;
+			case "4":
+				//pharmacist.updatePharmacist();
+				break;	
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}
+			break;
+			
+		case "3": // Inventory
+			// figure out which class is the highest in the hierarchy 
+			Inventory inventory = new Inventory();
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display inventories");
+			System.out.println("2 - Insert inventory");
+			System.out.println("3 - Delete inventory");
+			System.out.println("4 - Update inventory");
+
+			pharm_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			
+			switch (pharm_subOptions) {
+			case "1":			
+				inventory.displayInventory();
+				break;
+			case "2":
+				inventory.insertInventory();
+				break;
+			case "3":
+				//inventory.deleteInventory();
+				break;
+			case "4":
+				//inventory.updateInventory();
+				break;	
+			}
+			break;
+			
+		case "4": // Drug Info
+			// figure out which class is the highest in the hierarchy 
+			Drug drug = new Drug();
+			
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display drugs");
+			System.out.println("2 - Insert drug");
+			System.out.println("3 - Delete drug");
+			System.out.println("4 - Update drug");
+			
+			pharm_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			
+			switch (pharm_subOptions) {
+			case "1":
+				drug.displayDrug();		
+				break;
+			case "2":
+				drug.insertDrug();
+				break;
+			case "3":
+				//drug.deleteDrug();
+				break;
+			case "4":
+				//drug.updateDrug();
+				break;	
+			}
+			break;
+			
+		case "5": // Prescription
+			Prescribed prescr = new Prescribed();
+			
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display prescriptions");
+			System.out.println("2 - Delete prescription");
+			
+			pharm_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+	
+			switch (pharm_subOptions) {
+			case "1":
+				prescr.displayPrescribed();
+				break;
+			case "2":
+				//prescr.deletePrescribed();
+				break;
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}
+			break;
+			
+		case "6": // Order
+			// figure out which class is the highest in the hierarchy
+			Purchased purch = new Purchased();
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display all purchasing orders");
+			System.out.println("2 - Delete purchasing order");
+			System.out.println("3 - Update purchasing order");
+	
+			pharm_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			
+			switch (pharm_subOptions) {
+			case "1":
+				purch.displayPurchased();
+				break;
+			case "2":
+				//purch.deletePurchased();
+				break;
+			case "3":
+				//purch.updatePurchased();
+				break;
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;	
+			}
+			break;
+			
+		case "quit":
+			System.out.println("Bye!");
+			System.exit(0);
+			break;
+		}			
+	}
 
 	/*
 	 * displays Pharmacists

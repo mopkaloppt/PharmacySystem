@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.pharmacysystem.db.Main;
+import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
 
 public class Patient {
@@ -18,54 +18,91 @@ public class Patient {
 	String		illness;
 	String		address;
 
-	Connection conn = Main.getConn();
+	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
 	/*
-	 * Displays profile of a patient
+	 * Options for Patient 
 	 */ 
-	public void displayProfile(String first_name, String last_name) throws SQLException {
+	public void patientOptions(String pat_options) throws IOException, SQLException {
+		/*	pat_options to access the following:
+		1 - Your Profile 
+		2 - Prescription
+		3 - Purchase History */
+
+		switch (pat_options) {
+
+		case "1": // Your Profile
+			// can only see themselves !!!
+			System.out.println("What would you like to do?");
+			System.out.println("1 - Display your profile");
+			System.out.println("2 - Update your profile");
+			String pat_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
 	
-		// ERROR: Invalid column index !!!!
-		ResultSet rs = null;
-
-		try (
-				PreparedStatement stmt = conn.prepareStatement(
-						"SELECT patient_id, doctor_id, p_fname, p_lname, illness, address FROM patient WHERE p_fname = ? AND p_lname = ?",				
-						ResultSet.TYPE_SCROLL_INSENSITIVE, 
-						ResultSet.CONCUR_READ_ONLY);
-				) {
-			stmt.setString(3, first_name);
-			stmt.setString(4, last_name);
-			rs = stmt.executeQuery();
-			// commit work 
-			conn.commit();
-						
-			rs.last();
-			int nRows = rs.getRow();
-			if (nRows == 0) {
-				System.out.println(first_name + last_name + " not found!");	
-			} 
-			else {
-				StringBuffer buffer = new StringBuffer();
-
-				buffer.append("PatientID: " + rs.getInt("patient_id"));
-				buffer.append("\nDoctorID: " + rs.getInt("doctor_id"));
-				buffer.append("\nPatient name: " + rs.getString("p_fname"));
-				buffer.append("\nLast name: " + rs.getString("p_lname"));
-				buffer.append("\nIllness: " + rs.getString("illness"));
-				buffer.append("\nAddress: " + rs.getString("address"));
-
-				System.out.println(buffer.toString());					
-				rs.beforeFirst();	
-			}	
-		}								
-		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
-		}	
-		finally {
-			rs.close();
-		}			
+			switch (pat_subOptions) {
+			case "1":
+				// they can only see themselves .. 
+				String first_name = InputHelper.getInput("Enter your first name: ");
+				String last_name = InputHelper.getInput("Enter your last name: ");
+				
+				// ERROR: Invalid column index !!!!
+				displayMyProfile(first_name, last_name);
+				break;
+			case "2":
+				// they can only see themselves .. 
+//				String first_name = InputHelper.getInput("Enter your first name: ");
+//				String last_name = InputHelper.getInput("Enter your last name: ");
+				//patient.updateMyProfile(first_name, last_name);
+				break;
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}		
+			break;
+			
+		case "2": // Prescription
+			// patient can only see the prescriptions that have been assigned to themselves
+			// they can only see themselves .. 
+//			String first_name = InputHelper.getInput("Enter your first name: ");
+//			String last_name = InputHelper.getInput("Enter your last name: ");
+			//patient.seeMyPrescriptions(first_name, last_name);
+			break;
+			
+		case "3": // Purchase History
+			System.out.println("What would you like to do?");
+			System.out.println("1 - See your purchase history");
+			System.out.println("2 - Delete your purchase history");
+			pat_subOptions = InputHelper.getInput("Enter the number or type 'quit' if you wish to exit: ");
+			
+			switch (pat_subOptions) {
+			case "1":
+				// can only see the purchases with the same name
+				// they can only see themselves .. 
+//				String first_name = InputHelper.getInput("Enter your first name: ");
+//				String last_name = InputHelper.getInput("Enter your last name: ");
+				//patient.displayPurchased(first_name, last_name);
+				break;
+			case "2":
+				// they can only see themselves .. 
+//				String first_name = InputHelper.getInput("Enter your first name: ");
+//				String last_name = InputHelper.getInput("Enter your last name: ");
+				//patient.deletePurchased(first_name, last_name);
+				break;
+			case "quit":
+				System.out.println("Bye!");
+				System.exit(0);
+				break;
+			}				
+			break;
+			
+		case "quit":
+			System.out.println("Bye!");
+			System.exit(0);
+			break;
+		}				
 	}
+	
+	
 
 	/*
 	 * Displays Patients
@@ -86,7 +123,7 @@ public class Patient {
 			if (nRows == 0) {
 				System.out.println("No patients were found");	
 			} else {
-				System.out.println("Number of patients: " + nRows);
+				System.out.println("Number of patients: " + nRows + "\n");
 				rs.beforeFirst();
 			}
 
@@ -99,6 +136,8 @@ public class Patient {
 				buffer.append("\nLast name: " + rs.getString("p_lname"));
 				buffer.append("\nIllness: " + rs.getString("illness"));
 				buffer.append("\nAddress: " + rs.getString("address"));
+				buffer.append("\n");
+				
 
 				System.out.println(buffer.toString());					
 			}	
@@ -148,6 +187,7 @@ public class Patient {
 
 			// commit work 
 			conn.commit();
+			System.out.println("Successfuly committed to the database");
 			stmt.close();
 
 		}
@@ -173,16 +213,6 @@ public class Patient {
 		System.out.println("delete Patient");
 	}
 	
-	/*
-	 * Updates profile of a patient
-	 */ 
-	public void updateProfile() {
-		// for testing
-		System.out.println("Your profile has been updated");
-		
-	}
-
-
 
 	/*
 	 * Updates a Patient
@@ -190,6 +220,82 @@ public class Patient {
 	public void updatePatient() {
 		// for testing
 		System.out.println("update Patient");
+	}
+	
+	
+	
+	
+	
+	
+	// THESE METHODS ARE FOR CURRENTLY LOGGED-IN PATIENT //
+	
+	
+	/*
+	 * Displays profile of a patient
+	 */ 
+	public void displayMyProfile(String p_fname, String p_lname) throws SQLException {
+	
+		// ERROR: It can never find a patient!!! Don't know why
+		ResultSet rs = null;
+
+		try (
+				PreparedStatement stmt = conn.prepareStatement(
+						"SELECT * FROM patient WHERE p_fname = ? AND p_lname = ?",				
+						ResultSet.TYPE_SCROLL_INSENSITIVE, 
+						ResultSet.CONCUR_READ_ONLY);
+				) {
+		
+			stmt.setString(1, p_fname);
+			stmt.setString(2, p_lname);
+	
+			rs = stmt.executeQuery();
+			
+			// it never gets the row back.. don't know why!!!
+			if  (rs.next()) {
+				StringBuffer buffer = new StringBuffer();
+
+				buffer.append("PatientID: " + rs.getInt("patient_id"));
+				buffer.append("\nDoctorID: " + rs.getInt("doctor_id"));
+				buffer.append("\nPatient name: " + rs.getString("p_fname"));
+				buffer.append("\nLast name: " + rs.getString("p_lname"));
+				buffer.append("\nIllness: " + rs.getString("illness"));
+				buffer.append("\nAddress: " + rs.getString("address"));
+				buffer.append("\n");
+				System.out.println(buffer.toString());						
+								
+			}
+			else {
+				System.out.println(p_fname + " " + p_lname + " not found!");	
+		
+			}
+								
+		}
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		finally {
+			rs.close();
+		}			
+	}
+	
+	
+	
+	/*
+	 * Updates profile of a patient
+	 */ 
+	public void updateMyProfile(String p_fname, String p_lname) {
+		// for testing
+		System.out.println("Your profile has been updated");
+		
+	}
+
+	
+	/*
+	 * Patients see their prescriptions
+	 */ 
+	public void seeMyPrescriptions(String p_fname, String p_lname) {
+		// more or less same logic as in displayMyProfile if that one works
+		
 	}
 
 
