@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
@@ -16,7 +17,7 @@ public class Prescribed {
 	int patient_id;
 	String isRenewable;
 	Timestamp date_prescribed;
-	
+	public static Statement s;
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 
 	/*
@@ -130,7 +131,52 @@ public class Prescribed {
      * updates a Prescription
      */ 
 	public void updatePrescribed() {
-    	
+		String patientID = InputHelper.getInput("What is the patientID");
+		String doctorID = InputHelper.getInput("What is the doctorID?");
+		String drugID = InputHelper.getInput("What is the drugID?");
+		String input = "";
+		Boolean contains = false;
+		try {
+			s = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT * FROM Prescribed");
+			ArrayList<Integer> key1 = new ArrayList<Integer>();
+			ArrayList<Integer> key2 = new ArrayList<Integer>();
+			ArrayList<Integer> key3 = new ArrayList<Integer>();
+			while (r.next()) {
+				key1.add(r.getInt("patientID"));
+				key2.add(r.getInt("doctorID"));
+				key3.add(r.getInt("drugID"));
+			}
+
+			for(int i = 0; i < key1.size(); i++){
+				if(key1.get(i).equals(Integer.parseInt(patientID)) && key2.get(i).equals(Integer.parseInt(doctorID)) && key1.get(i).equals(Integer.parseInt(drugID)))
+					contains = true;
+			}
+
+			if(!contains){
+				System.out.println("Touple does not exist, exiting");
+				return;
+			}
+
+			input = InputHelper.getInput("What would you like to update?\n isRenewable or datePrescribed?");
+			s = conn.createStatement();
+			s.executeQuery("Select " + input + " from Prescribed WHERE patientID = " + patientID + " and doctorID = "+doctorID+ " and drugID = "+drugID);
+			s.close();
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute does not exist in table.");
+			return;
+		}
+
+		String result = InputHelper.getInput("What would you like to update this to?");
+
+		try {
+			s = conn.createStatement();
+			s.executeUpdate("UPDATE Prescribed SET " + input + " = '" + result + "' WHERE patientID = " + patientID + " and doctorID = "+doctorID+ " and drugID = "+drugID);
+			System.out.println("Updated");
+
+		} catch (SQLException e) {
+			System.out.println("Attribute could not be changed, please enter valid parameters.");
+		}
     }
     
 

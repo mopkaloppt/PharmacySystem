@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
@@ -17,7 +18,7 @@ public class Patient {
 	String 		p_lname;
 	String		illness;
 	String		address;
-
+	public static Statement s;
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
 	/*
@@ -284,8 +285,40 @@ public class Patient {
 	 * Updates profile of a patient
 	 */ 
 	public void updateMyProfile(String p_fname, String p_lname) {
-		// for testing
-		System.out.println("Your profile has been updated");
+		String key = InputHelper.getInput("What's the id of the patient?");
+		String input = "";
+		try {
+			s = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT * FROM Patient");
+			// Creates array with all ids of Patients
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			while (r.next()) {
+				ids.add(r.getInt("patientID"));
+			}
+
+			if (!ids.contains(Integer.parseInt(key))){
+				System.out.println("Patient not found, exiting.");
+				return;
+			}
+
+			input = InputHelper.getInput("What would you like to update about the patient\n Please choose one: doctorID, name, illness, or address?");
+			s = conn.createStatement();
+			s.executeQuery("Select " + input + " from Patient WHERE PatientID = "+key);
+			s.close();
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute does not exist in table.");
+			return;
+		}
+
+		String change = InputHelper.getInput("What would you like to change this to?");
+		try {
+			s = conn.createStatement();
+			s.executeUpdate("UPDATE Patient SET "+input+ " = '" + change + "' WHERE patientID = " + key);
+			System.out.println("Updated");
+
+		} catch (SQLException e) {
+			System.out.println("Attribute could not be changed, please enter valid parameters.");;
+		}
 		
 	}
 

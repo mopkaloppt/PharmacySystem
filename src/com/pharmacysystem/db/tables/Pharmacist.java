@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
@@ -17,7 +18,7 @@ public class Pharmacist extends Pharmacy {
 	String 		emp_lname; 
 	int 		pharmacy_id;
 	//int 		pharmacy_id = getPharmacyID(); // Do we have to inherit from Pharmacy class??
-
+	public static Statement s;
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
 	/*
@@ -307,9 +308,41 @@ public class Pharmacist extends Pharmacy {
 	 * updates a Pharmacist
 	 */ 
 	public void updatePharmacist() {
-		// for testing
-		System.out.println("update Pharmacist");
 
+		String key = InputHelper.getInput("What's the employeeID?");
+		String input = "";
+		try {
+			s = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT * FROM Pharmacist");
+			// Creates array with all ids of Pharmacists
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			while (r.next()) {
+				ids.add(r.getInt("employeeID"));
+			}
+
+			if (!ids.contains(Integer.parseInt(key))){
+				System.out.println("Pharmacist not found, exiting.");
+				return;
+			}
+
+			input = InputHelper.getInput("What would you like to update about the Pharmacist\n Please choose one: name, or pharmacyID?");
+			s = conn.createStatement();
+			s.executeQuery("Select " + input + " from Pharmacist WHERE employeeID = "+key);
+			s.close();
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute does not exist in table.");
+			return;
+		}
+
+		String change = InputHelper.getInput("What would you like to change this to?");
+		try {
+			s = conn.createStatement();
+			s.executeUpdate("UPDATE Pharmacist SET "+input+ " = '" + change + "' WHERE employeeID = " + key);
+			System.out.println("Updated");
+
+		} catch (SQLException e) {
+			System.out.println("Attribute could not be changed, please enter valid parameters.");
+		}
 	}
 
 }

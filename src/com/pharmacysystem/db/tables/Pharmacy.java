@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
@@ -14,7 +15,7 @@ public class Pharmacy {
 	String pharmacy_name;
 	String pharmacy_address; 
 	String pharmacy_phone;
-	
+	public static Statement s;
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
 	/*
@@ -120,7 +121,40 @@ public class Pharmacy {
      * updates a Pharmacy
      */ 
 	public void updatePharmacy() {
-    	
+		String key = InputHelper.getInput("What's the pharmacyID?");
+		String input = "";
+		try {
+			s = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT * FROM Pharmacy");
+			// Creates array with all ids of Patients
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			while (r.next()) {
+				ids.add(r.getInt("pharmacyID"));
+			}
+
+			if (!ids.contains(Integer.parseInt(key))){
+				System.out.println("Pharmacy not found, exiting.");
+				return;
+			}
+
+			input = InputHelper.getInput("What would you like to update about the Pharmacy\n Please choose one: name, or address?");
+			s = conn.createStatement();
+			s.executeQuery("Select " + input + " from Pharmacy WHERE pharmacyID = "+key);
+			s.close();
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute does not exist in table.");
+			return;
+		}
+
+		String change = InputHelper.getInput("What would you like to change this to?");
+		try {
+			s = conn.createStatement();
+			s.executeUpdate("UPDATE Pharmacy SET "+input+ " = '" + change + "' WHERE pharmacyID = " + key);
+			System.out.println("Updated");
+
+		} catch (SQLException e) {
+			System.out.println("Attribute could not be changed, please enter valid parameters.");;
+		}
     }
 	
 	// Do I need this method??

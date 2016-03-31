@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import com.pharmacysystem.db.ConnectionManager;
 
@@ -19,7 +20,7 @@ public class Purchased {
 	int drug_id; // inherit from Drug 
 	double price;
 	String date_purchased; // timestamp SQL type
-	
+	public static Statement s;
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 
 	/*
@@ -138,7 +139,40 @@ public class Purchased {
      * updates a purchase
      */ 
 	public void updatePurchased() {
-    	
+		String key = InputHelper.getInput("What's the receiptNumber?");
+		String input = "";
+		try {
+			s = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT * FROM Purchase");
+			// Creates array with all ids of purchases
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			while (r.next()) {
+				ids.add(r.getInt("receiptNumber"));
+			}
+
+			if (!ids.contains(Integer.parseInt(key))){
+				System.out.println("Purchase not found, exiting.");
+				return;
+			}
+
+			input = InputHelper.getInput("What would you like to update about the Purchase\n Please choose one: patientId, drugID, pharmacyID, price, or datePurchased?");
+			s = conn.createStatement();
+			s.executeQuery("Select " + input + " from purchase WHERE receiptNumber = "+key);
+			s.close();
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute does not exist in table.");
+			return;
+		}
+
+		String change = InputHelper.getInput("What would you like to change this to?");
+		try {
+			s = conn.createStatement();
+			s.executeUpdate("UPDATE Purchase SET "+input+ " = '" + change + "' WHERE receiptNumber = " + key);
+			System.out.println("Updated");
+
+		} catch (SQLException e) {
+			System.out.println("Attribute could not be changed, please enter valid parameters.");;
+		}
     }
     
     

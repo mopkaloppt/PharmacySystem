@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
@@ -14,7 +15,7 @@ public class Inventory {
 	int pharmacy_id;
 	int drug_id;
 	int stock;
-	
+	public static Statement s;
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	/*
      * displays inventories
@@ -118,7 +119,50 @@ public class Inventory {
      * updates an Inventory
      */ 
 	public void updateInventory() {
-    	
+
+		String drugID = InputHelper.getInput("What is the drugID");
+		String inventoryID = InputHelper.getInput("What is the inventoryID?");
+		String input = "";
+		Boolean contains = false;
+		try {
+			s = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT * FROM Inventory");
+			ArrayList<Integer> key1 = new ArrayList<Integer>();
+			ArrayList<Integer> key2 = new ArrayList<Integer>();
+			while (r.next()) {
+				key1.add(r.getInt("drugID"));
+				key2.add(r.getInt("inventoryID"));
+			}
+
+			for(int i = 0; i < key1.size(); i++){
+				if(key1.get(i).equals(Integer.parseInt(drugID)) && key2.get(i).equals(Integer.parseInt(inventoryID)))
+					contains = true;
+			}
+
+			if(!contains){
+				System.out.println("Touple does not exist, exiting");
+				return;
+			}
+
+			input = InputHelper.getInput("What would you like to update?\n pharmacyID, or stock?");
+			s = conn.createStatement();
+			s.executeQuery("Select " + input + " from Inventory WHERE DrugID = " + drugID + " and inventoryID = " + inventoryID);
+			s.close();
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute does not exist in table.");
+			return;
+		}
+
+		String result = InputHelper.getInput("What would you like to update this to?");
+
+		try {
+			s = conn.createStatement();
+			s.executeUpdate("UPDATE Inventory SET stock = '" + result + "' WHERE DrugID = " + drugID + " and inventoryID = " + inventoryID);
+			System.out.println("Updated");
+
+		} catch (SQLException e) {
+			System.out.println("Attribute could not be changed, please enter valid parameters.");;
+		}
     }
     
 

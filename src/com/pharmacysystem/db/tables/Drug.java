@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.pharmacysystem.db.ConnectionManager;
 import com.pharmacysystem.db.util.InputHelper;
@@ -15,8 +16,8 @@ public class Drug {
 	int drug_id;
 	String drug_name;
 	String drug_info;
-	String dosage; 
-
+	String dosage;
+	public static Statement s;
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 
 
@@ -124,7 +125,39 @@ public class Drug {
 	 * updates a drug
 	 */ 
 	public void updateDrug() {
+		String input = "";
+		String key = InputHelper.getInput("What is the drugID");
+		try {
+			s = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT * FROM drug");
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			while (r.next()) {
+				ids.add(r.getInt("drugID"));
+			}
 
+			if (!ids.contains(Integer.parseInt(key))){
+				System.out.println("Drug not found, exiting.");
+				return;
+			}
+
+			input = InputHelper.getInput("What would you like to update?\n name, info, or dosage?");
+			s = conn.createStatement();
+			s.executeQuery("Select " + input + " from drug WHERE DrugID = "+key);
+			s.close();
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute does not exist in table.");
+			return;
+		}
+		String result = InputHelper.getInput("What is the new value?");
+
+		try {
+			s = conn.createStatement();
+			s.executeUpdate("UPDATE Drug SET " +input+ " = '" + result + "' WHERE drugID = " + key);
+			System.out.println("Updated");
+
+		} catch (SQLException e) {
+			System.out.println("Try again, attribute cannot be changed to that value.");;
+		}
 	}
 
 }
