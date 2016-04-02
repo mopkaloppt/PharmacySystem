@@ -139,25 +139,26 @@ public class Purchased {
      * updates a purchase
      */ 
 	public void updatePurchased() {
-		String key = InputHelper.getInput("What's the receiptNumber?");
+
+		String key = InputHelper.getInput("What's the receipt_no?");
 		String input = "";
 		try {
 			s = conn.createStatement();
-			ResultSet r = s.executeQuery("SELECT * FROM Purchase");
-			// Creates array with all ids of purchases
-			ArrayList<Integer> ids = new ArrayList<Integer>();
+			ResultSet r = s.executeQuery("SELECT * FROM purchased");
+			// Creates array with all ids of Patients
+			ArrayList<String> ids = new ArrayList<String>();
 			while (r.next()) {
-				ids.add(r.getInt("receiptNumber"));
+				ids.add(r.getString("receipt_no"));
 			}
 
-			if (!ids.contains(Integer.parseInt(key))){
+			if (!ids.contains(key)){
 				System.out.println("Purchase not found, exiting.");
 				return;
 			}
 
-			input = InputHelper.getInput("What would you like to update about the Purchase\n Please choose one: patientId, drugID, pharmacyID, price, or datePurchased?");
+			input = InputHelper.getInput("What would you like to update about the Purchase\n Please choose one: patient_id, drug_id, pharmacy_id, price, or date_purchased?");
 			s = conn.createStatement();
-			s.executeQuery("Select " + input + " from purchase WHERE receiptNumber = "+key);
+			s.executeQuery("Select " + input + " from purchased WHERE receipt_no = "+key);
 			s.close();
 		} catch (SQLException e) {
 			System.out.println("Try again, attribute does not exist in table.");
@@ -167,7 +168,7 @@ public class Purchased {
 		String change = InputHelper.getInput("What would you like to change this to?");
 		try {
 			s = conn.createStatement();
-			s.executeUpdate("UPDATE Purchase SET "+input+ " = '" + change + "' WHERE receiptNumber = " + key);
+			s.executeUpdate("UPDATE purchased SET "+input+ " = '" + change + "' WHERE receipt_no = " + key);
 			System.out.println("Updated");
 
 		} catch (SQLException e) {

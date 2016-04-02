@@ -121,25 +121,25 @@ public class Pharmacy {
      * updates a Pharmacy
      */ 
 	public void updatePharmacy() {
-		String key = InputHelper.getInput("What's the pharmacyID?");
+		String key = InputHelper.getInput("What's the pharmacy_id?");
 		String input = "";
 		try {
 			s = conn.createStatement();
-			ResultSet r = s.executeQuery("SELECT * FROM Pharmacy");
+			ResultSet r = s.executeQuery("SELECT * FROM pharmacy");
 			// Creates array with all ids of Patients
-			ArrayList<Integer> ids = new ArrayList<Integer>();
+			ArrayList<String> ids = new ArrayList<String>();
 			while (r.next()) {
-				ids.add(r.getInt("pharmacyID"));
+				ids.add(r.getString("pharmacy_id"));
 			}
 
-			if (!ids.contains(Integer.parseInt(key))){
+			if (!ids.contains(key)){
 				System.out.println("Pharmacy not found, exiting.");
 				return;
 			}
 
-			input = InputHelper.getInput("What would you like to update about the Pharmacy\n Please choose one: name, or address?");
+			input = InputHelper.getInput("What would you like to update about the Pharmacy\n Please choose one: pharmacy_name, address, or phone?");
 			s = conn.createStatement();
-			s.executeQuery("Select " + input + " from Pharmacy WHERE pharmacyID = "+key);
+			s.executeQuery("Select " + input + " from pharmacy WHERE pharmacy_id = "+key);
 			s.close();
 		} catch (SQLException e) {
 			System.out.println("Try again, attribute does not exist in table.");
@@ -149,7 +149,7 @@ public class Pharmacy {
 		String change = InputHelper.getInput("What would you like to change this to?");
 		try {
 			s = conn.createStatement();
-			s.executeUpdate("UPDATE Pharmacy SET "+input+ " = '" + change + "' WHERE pharmacyID = " + key);
+			s.executeUpdate("UPDATE pharmacy SET "+input+ " = '" + change + "' WHERE pharmacy_id = " + key);
 			System.out.println("Updated");
 
 		} catch (SQLException e) {

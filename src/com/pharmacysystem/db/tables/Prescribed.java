@@ -131,25 +131,25 @@ public class Prescribed {
      * updates a Prescription
      */ 
 	public void updatePrescribed() {
-		String patientID = InputHelper.getInput("What is the patientID");
-		String doctorID = InputHelper.getInput("What is the doctorID?");
-		String drugID = InputHelper.getInput("What is the drugID?");
+		String patient_id = InputHelper.getInput("What is the patientID");
+		String doctor_id = InputHelper.getInput("What is the doctorID?");
+		String drug_id = InputHelper.getInput("What is the drugID?");
 		String input = "";
 		Boolean contains = false;
 		try {
 			s = conn.createStatement();
-			ResultSet r = s.executeQuery("SELECT * FROM Prescribed");
-			ArrayList<Integer> key1 = new ArrayList<Integer>();
-			ArrayList<Integer> key2 = new ArrayList<Integer>();
-			ArrayList<Integer> key3 = new ArrayList<Integer>();
+			ResultSet r = s.executeQuery("SELECT * FROM prescribed");
+			ArrayList<String> key1 = new ArrayList<String>();
+			ArrayList<String> key2 = new ArrayList<String>();
+			ArrayList<String> key3 = new ArrayList<String>();
 			while (r.next()) {
-				key1.add(r.getInt("patientID"));
-				key2.add(r.getInt("doctorID"));
-				key3.add(r.getInt("drugID"));
+				key1.add(r.getString("patient_id"));
+				key2.add(r.getString("doctor_id"));
+				key3.add(r.getString("drug_id"));
 			}
 
 			for(int i = 0; i < key1.size(); i++){
-				if(key1.get(i).equals(Integer.parseInt(patientID)) && key2.get(i).equals(Integer.parseInt(doctorID)) && key1.get(i).equals(Integer.parseInt(drugID)))
+				if(key1.get(i).equals(patient_id) && key2.get(i).equals(doctor_id) && key1.get(i).equals(drug_id))
 					contains = true;
 			}
 
@@ -158,9 +158,9 @@ public class Prescribed {
 				return;
 			}
 
-			input = InputHelper.getInput("What would you like to update?\n isRenewable or datePrescribed?");
+			input = InputHelper.getInput("What would you like to update?\n isRenewable or date_prescribed?");
 			s = conn.createStatement();
-			s.executeQuery("Select " + input + " from Prescribed WHERE patientID = " + patientID + " and doctorID = "+doctorID+ " and drugID = "+drugID);
+			s.executeQuery("Select " + input + " from prescribed WHERE patient_id = " + patient_id + " and doctor_id = "+doctor_id+ " and drug_id = "+drug_id);
 			s.close();
 		} catch (SQLException e) {
 			System.out.println("Try again, attribute does not exist in table.");
@@ -171,7 +171,7 @@ public class Prescribed {
 
 		try {
 			s = conn.createStatement();
-			s.executeUpdate("UPDATE Prescribed SET " + input + " = '" + result + "' WHERE patientID = " + patientID + " and doctorID = "+doctorID+ " and drugID = "+drugID);
+			s.executeUpdate("UPDATE prescribed SET " + input + " = '" + result + "' WHERE patient_id = " + patient_id + " and doctor_id = "+doctor_id+ " and drug_id = "+drug_id);
 			System.out.println("Updated");
 
 		} catch (SQLException e) {

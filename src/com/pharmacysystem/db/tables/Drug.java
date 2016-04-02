@@ -130,19 +130,19 @@ public class Drug {
 		try {
 			s = conn.createStatement();
 			ResultSet r = s.executeQuery("SELECT * FROM drug");
-			ArrayList<Integer> ids = new ArrayList<Integer>();
+			ArrayList<String> ids = new ArrayList<String>();
 			while (r.next()) {
-				ids.add(r.getInt("drugID"));
+				ids.add(r.getString("drug_id"));
 			}
 
-			if (!ids.contains(Integer.parseInt(key))){
+			if (!ids.contains(key)){
 				System.out.println("Drug not found, exiting.");
 				return;
 			}
 
-			input = InputHelper.getInput("What would you like to update?\n name, info, or dosage?");
+			input = InputHelper.getInput("What would you like to update?\n drug_name, drug_info, or dosage?");
 			s = conn.createStatement();
-			s.executeQuery("Select " + input + " from drug WHERE DrugID = "+key);
+			s.executeQuery("Select " + input + " from drug WHERE drug_id = "+key);
 			s.close();
 		} catch (SQLException e) {
 			System.out.println("Try again, attribute does not exist in table.");
@@ -152,7 +152,7 @@ public class Drug {
 
 		try {
 			s = conn.createStatement();
-			s.executeUpdate("UPDATE Drug SET " +input+ " = '" + result + "' WHERE drugID = " + key);
+			s.executeUpdate("UPDATE Drug SET " +input+ " = '" + result + "' WHERE drug_info = " + key);
 			System.out.println("Updated");
 
 		} catch (SQLException e) {

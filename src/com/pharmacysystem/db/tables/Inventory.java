@@ -120,22 +120,22 @@ public class Inventory {
      */ 
 	public void updateInventory() {
 
-		String drugID = InputHelper.getInput("What is the drugID");
-		String inventoryID = InputHelper.getInput("What is the inventoryID?");
+		String pharmacy_id = InputHelper.getInput("What is the pharmacy_id");
+		String drug_id = InputHelper.getInput("What is the drug_id?");
 		String input = "";
 		Boolean contains = false;
 		try {
 			s = conn.createStatement();
 			ResultSet r = s.executeQuery("SELECT * FROM Inventory");
-			ArrayList<Integer> key1 = new ArrayList<Integer>();
-			ArrayList<Integer> key2 = new ArrayList<Integer>();
+			ArrayList<String> key1 = new ArrayList<String>();
+			ArrayList<String> key2 = new ArrayList<String>();
 			while (r.next()) {
-				key1.add(r.getInt("drugID"));
-				key2.add(r.getInt("inventoryID"));
+				key1.add(r.getString("pharmacy_id"));
+				key2.add(r.getString("drug_id"));
 			}
 
 			for(int i = 0; i < key1.size(); i++){
-				if(key1.get(i).equals(Integer.parseInt(drugID)) && key2.get(i).equals(Integer.parseInt(inventoryID)))
+				if(key1.get(i).equals(pharmacy_id) && key2.get(i).equals(drug_id))
 					contains = true;
 			}
 
@@ -144,20 +144,10 @@ public class Inventory {
 				return;
 			}
 
-			input = InputHelper.getInput("What would you like to update?\n pharmacyID, or stock?");
-			s = conn.createStatement();
-			s.executeQuery("Select " + input + " from Inventory WHERE DrugID = " + drugID + " and inventoryID = " + inventoryID);
-			s.close();
-		} catch (SQLException e) {
-			System.out.println("Try again, attribute does not exist in table.");
-			return;
-		}
+			String result = InputHelper.getInput("What would you like to update the stock to?");
 
-		String result = InputHelper.getInput("What would you like to update this to?");
-
-		try {
 			s = conn.createStatement();
-			s.executeUpdate("UPDATE Inventory SET stock = '" + result + "' WHERE DrugID = " + drugID + " and inventoryID = " + inventoryID);
+			s.executeUpdate("UPDATE Inventory SET stock = '" + result + "' WHERE pharmacy_id = " + pharmacy_id + " and drug_id = " + drug_id);
 			System.out.println("Updated");
 
 		} catch (SQLException e) {

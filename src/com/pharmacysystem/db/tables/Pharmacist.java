@@ -309,25 +309,25 @@ public class Pharmacist extends Pharmacy {
 	 */ 
 	public void updatePharmacist() {
 
-		String key = InputHelper.getInput("What's the employeeID?");
+		String key = InputHelper.getInput("What's the employee_id?");
 		String input = "";
 		try {
 			s = conn.createStatement();
-			ResultSet r = s.executeQuery("SELECT * FROM Pharmacist");
+			ResultSet r = s.executeQuery("SELECT * FROM pharmacist");
 			// Creates array with all ids of Pharmacists
-			ArrayList<Integer> ids = new ArrayList<Integer>();
+			ArrayList<String> ids = new ArrayList<String>();
 			while (r.next()) {
-				ids.add(r.getInt("employeeID"));
+				ids.add(r.getString("employee_id"));
 			}
 
-			if (!ids.contains(Integer.parseInt(key))){
+			if (!ids.contains(key)){
 				System.out.println("Pharmacist not found, exiting.");
 				return;
 			}
 
-			input = InputHelper.getInput("What would you like to update about the Pharmacist\n Please choose one: name, or pharmacyID?");
+			input = InputHelper.getInput("What would you like to update about the Pharmacist\n Please choose one: emp_fname, emp_lname, or pharmacy_id?");
 			s = conn.createStatement();
-			s.executeQuery("Select " + input + " from Pharmacist WHERE employeeID = "+key);
+			s.executeQuery("Select " + input + " from pharmacist WHERE employee_id = "+key);
 			s.close();
 		} catch (SQLException e) {
 			System.out.println("Try again, attribute does not exist in table.");
@@ -337,7 +337,7 @@ public class Pharmacist extends Pharmacy {
 		String change = InputHelper.getInput("What would you like to change this to?");
 		try {
 			s = conn.createStatement();
-			s.executeUpdate("UPDATE Pharmacist SET "+input+ " = '" + change + "' WHERE employeeID = " + key);
+			s.executeUpdate("UPDATE pharmacist SET "+input+ " = '" + change + "' WHERE employee_id = " + key);
 			System.out.println("Updated");
 
 		} catch (SQLException e) {
